@@ -82,7 +82,7 @@ const Navbar = ({ onNearbyData }) => {
   };
 
   return (
-    <nav className="flex items-center justify-between px-4 py-3 bg-blue-600 text-white shadow-md">
+    <nav className=" flex items-center justify-between px-4 py-3 bg-blue-600 text-white shadow-md">
       {/* Logo */}
       <Link to="/" className="text-xl font-bold mr-5">
         RentMate
@@ -133,13 +133,20 @@ const Navbar = ({ onNearbyData }) => {
       </select>
 
       {/* Add Listing Button */}
-      <Link
+      <div>
+          {isAuthenticated ? <Link
         to="/register"
-        className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500"
-      >
+        className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500">
         <IoMdAddCircleOutline className="mr-1 text-xl" />
         Add Listing
-      </Link>
+      </Link> : <Link
+        to="/login"
+        className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500">
+        <IoMdAddCircleOutline className="mr-1 text-xl" />
+        Add Listing
+      </Link> }
+      
+        </div>
 
       {/* Auth and Profile */}
       <div className="flex items-center space-x-4">

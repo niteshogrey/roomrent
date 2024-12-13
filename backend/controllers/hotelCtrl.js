@@ -170,30 +170,34 @@ const find_nearest = async (req, res) => {
 
 //filter 
 const filterHotels = async (req, res) => {
-  const { name, minPrice, maxPrice, roomType, wifi } = req.query;
+  const { name, minPrice, maxPrice, type, property, room, wifi, sort } = req.query;
 
   try {
-    // Build the filter object dynamically
     const filter = {};
 
-    // Add filters based on query parameters
-    if (name) {
-      filter.name = { $regex: name, $options: "i" }; // Case-insensitive search
-    }
+    // Add filters dynamically
+    if (name) filter.name = { $regex: name, $options: "i" }; // Case-insensitive search
+    if (type) filter.type = type; // Exact match for type
+    if (property) filter.property = property; // Exact match for property
+    if (room) filter.room = room; // Exact match for room type
+    if (wifi) filter.wifi = wifi; // Convert to boolean
+
+    // Price range filtering
     if (minPrice || maxPrice) {
       filter.price = {};
-      if (minPrice) filter.price.$gte = parseFloat(minPrice); // Greater than or equal
-      if (maxPrice) filter.price.$lte = parseFloat(maxPrice); // Less than or equal
-    }
-    if (roomType) {
-      filter.room = roomType; // Exact match for room type
-    }
-    if (wifi) {
-      filter.wifi = wifi === "true"; // Convert to boolean
+      if (minPrice) filter.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
     }
 
-    // Query the database with the filters
-    const hotels = await Hotels.find(filter);
+    // Sorting logic
+    let sortOption = {};
+    if (sort) {
+      if (sort === "lowToHigh") sortOption.price = 1; // Ascending order
+      else if (sort === "highToLow") sortOption.price = -1; // Descending order
+    }
+
+    // Query the database with sorting
+    const hotels = await Hotels.find(filter).sort(sortOption);
 
     // Send the response
     res.status(200).json({
@@ -210,6 +214,8 @@ const filterHotels = async (req, res) => {
     });
   }
 };
+
+
 
 
 module.exports = {

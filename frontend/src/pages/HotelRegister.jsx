@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const HotelRegister = () => {
   const [hotel, setHotel] = useState({
@@ -16,6 +17,7 @@ const HotelRegister = () => {
   const [images, setImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
+  const navigate = useNavigate()
 
   const validateForm = () => {
     const newErrors = {};
@@ -76,6 +78,7 @@ const HotelRegister = () => {
 
       console.log("Hotel Added:", response.data);
       alert(`Hotel "${hotel.name}" added successfully!`);
+      navigate('/')
       setHotel({
         name: "",
         phone: "",
@@ -88,6 +91,7 @@ const HotelRegister = () => {
         longitude: null,
       });
       setImages([]);
+
       setErrors({});
     } catch (error) {
       console.error("Error adding hotel:", error);
