@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api/v1'
+const API_URL = 'https://roomrent-3u2p.onrender.com/api/v1'
 
 // API call to create a hotel
 export const createHotel = createAsyncThunk(
@@ -25,7 +25,7 @@ export const createHotel = createAsyncThunk(
         console.log(`${pair[0]}:`, pair[1]);
       }
 
-      const response = await axios.post("http://localhost:8000/api/v1/hotels/create", formData, {
+      const response = await axios.post("https://roomrent-3u2p.onrender.com/api/v1/hotels/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -42,7 +42,7 @@ export const getAllHotels = createAsyncThunk(
   "hotels/getAllHotels",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/hotels/hotels"); // Correct endpoint
+      const response = await axios.get("https://roomrent-3u2p.onrender.com/api/v1/hotels/hotels"); // Correct endpoint
       return response.data; // Assuming response.data contains the hotels array
     } catch (error) {
       console.error("Error fetching hotels:", error);
@@ -57,7 +57,7 @@ export const findNearestHotels = createAsyncThunk(
   'hotels/findNearestHotels',
   async (locationData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/hotels/find-nearest', locationData, {
+      const response = await axios.post('https://roomrent-3u2p.onrender.com/api/v1/hotels/find-nearest', locationData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -77,7 +77,7 @@ export const filterHotels = createAsyncThunk(
   'hotels/filterHotels',
   async (filters, { rejectWithValue }) => {
     try {
-      const response = await axios.get('http://localhost:8000/api/v1/hotels/filter', {
+      const response = await axios.get('https://roomrent-3u2p.onrender.com/api/v1/hotels/filter', {
         params: filters, // Pass filters as query parameters
       });
       return response.data; // Assuming response.data contains the filtered hotels
