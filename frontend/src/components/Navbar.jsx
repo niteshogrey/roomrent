@@ -28,7 +28,8 @@ const Navbar = () => {
     <div>
       {/* Desktop Navbar */}
       <div className="lg:flex items-center justify-between border-b h-14 bg-blue-950 text-white shadow-md hidden">
-        <img src={logo} alt="" className="w-32 h-14" />
+    
+        <h1 className="w-32 h-14">RoomRent</h1>
         <div className="flex items-center pr-4 space-x-4">
           {isAuthenticated ? (
             <Link
