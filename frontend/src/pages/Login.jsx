@@ -18,7 +18,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:8000/api/v1/user/send-otp", { phoneNumber });
+      await axios.post("https://roomrent-3u2p.onrender.com/api/v1/user/send-otp", { phoneNumber });
       alert("OTP sent successfully!");
       setStep(2);
     } catch (error) {
@@ -35,7 +35,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/user/verify", {
+      const response = await axios.post("https://roomrent-3u2p.onrender.com/api/v1/user/verify", {
         phoneNumber,
         code: otp,
       });
@@ -69,7 +69,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/user/register", {
+      const response = await axios.post("https://roomrent-3u2p.onrender.com/api/v1/user/register", {
         phoneNumber,
         username,
       });
