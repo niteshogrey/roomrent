@@ -1,175 +1,94 @@
-import React, { useState } from "react";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdOutlineMyLocation } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoReorderThree } from "react-icons/io5";
+import { IoPersonCircleSharp } from "react-icons/io5";
+import logo from "../assets/Licxo.jpg";
 
 const useAuth = () => {
   return !!localStorage.getItem("token");
 };
 
-const districts = [
-  "Raipur",
-  "Bilaspur",
-  "Durg",
-  "Korba",
-  "Jagdalpur",
-  "Rajnandgaon",
-  "Ambikapur",
-  "Raigarh",
-  "Kanker",
-  "Kawardha",
-  "Mahasamund",
-  "Dhamtari",
-];
+const getUsername = () => {
+  return localStorage.getItem("username") || ""; // Assume username is stored in localStorage
+};
 
-const Navbar = ({ onNearbyData }) => {
-  console.log("onNearbyData in Navbar:", onNearbyData); // This will log `undefined` if not passed properly.
-
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [search, setSearch] = useState("");
-  const [language, setLanguage] = useState("EN");
+const Navbar = () => {
   const navigate = useNavigate();
   const isAuthenticated = useAuth();
+  const username = isAuthenticated ? getUsername() : "";
 
   const handleLogin = () => navigate("/login");
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/login");
   };
 
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-
-          // Fetch nearby hotels by passing latitude, longitude, and maxDistance
-          try {
-            const response = await fetch(
-              `http://localhost:8000/api/v1/hotels/find-nearest`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  latitude,
-                  longitude,
-                  maxDistance: 1000, // Optional max distance, in miles
-                }),
-              }
-            );
-            if (response.ok) {
-              const data = await response.json();
-              if (onNearbyData) {
-                onNearbyData(data); // Pass the nearby rentals to the parent component
-              } else {
-                console.error("onNearbyData is not a function");
-              }
-            } else {
-              console.error("Failed to fetch nearby data");
-            }
-          } catch (error) {
-            console.error("Error fetching nearby rentals:", error);
-          }
-        },
-        (error) => alert("Error fetching location: " + error.message)
-      );
-    } else {
-      alert("Geolocation is not supported by this browser.");
-    }
-  };
-
   return (
-    <nav className=" flex items-center justify-between px-4 py-3 bg-blue-600 text-white shadow-md">
-      {/* Logo */}
-      <Link to="/" className="text-xl font-bold mr-5">
-        RentMate
-      </Link>
-
-      {/* District Selector and Location */}
-      <div className="flex items-center space-x-2">
-        <select
-          className="bg-gray-700 text-white px-3 py-1 rounded"
-          value={selectedDistrict}
-          onChange={(e) => setSelectedDistrict(e.target.value)}
-        >
-          <option value="">Select District</option>
-          {districts.map((district) => (
-            <option key={district} value={district}>
-              {district}
-            </option>
-          ))}
-        </select>
-        <button
-          onClick={getLocation}
-          className="flex items-center px-2 py-1 bg-gray-500 rounded hover:bg-gray-400"
-        >
-          <MdOutlineMyLocation className="mr-1" />
-          Find Near Me
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      <div className="flex-1 mx-5">
-        <input
-          type="text"
-          placeholder="Search for rooms, flats, etc."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-3 py-2 text-black rounded border focus:ring-2 focus:ring-blue-300"
-        />
-      </div>
-
-      {/* Language Selector */}
-      <select
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        className="bg-gray-700 text-white px-3 py-1 rounded mx-2"
-      >
-        <option value="EN">English</option>
-        <option value="HI">हिन्दी</option>
-      </select>
-
-      {/* Add Listing Button */}
-      <div>
-          {isAuthenticated ? <Link
-        to="/register"
-        className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500">
-        <IoMdAddCircleOutline className="mr-1 text-xl" />
-        Add Listing
-      </Link> : <Link
-        to="/login"
-        className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500">
-        <IoMdAddCircleOutline className="mr-1 text-xl" />
-        Add Listing
-      </Link> }
-      
-        </div>
-
-      {/* Auth and Profile */}
-      <div className="flex items-center space-x-4">
-        {isAuthenticated ? (
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 rounded hover:bg-red-500"
-          >
-            Logout
-          </button>
-        ) : (
-          <button
-            onClick={handleLogin}
-            className="px-4 py-2 bg-blue-700 rounded hover:bg-blue-600"
-          >
-            Login
-          </button>
-        )}
-        <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-lg">
-          P
+    <div>
+      {/* Desktop Navbar */}
+      <div className="lg:flex items-center justify-between border-b h-14 bg-blue-950 text-white shadow-md hidden">
+        <img src={logo} alt="" className="w-32 h-14" />
+        <div className="flex items-center pr-4 space-x-4">
+          {isAuthenticated ? (
+            <Link
+              to="/addhotel"
+              className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500"
+            >
+              <IoMdAddCircleOutline className="mr-1 text-xl" />
+              Add Listing
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center px-4 py-2 bg-green-600 rounded hover:bg-green-500"
+            >
+              <IoMdAddCircleOutline className="mr-1 text-xl" />
+              Sign up
+            </Link>
+          )}
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-600 rounded hover:bg-red-500"
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className="px-4 py-2 bg-blue-700 rounded hover:bg-blue-600"
+            >
+              Login
+            </button>
+          )}
+          {isAuthenticated && (
+            <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-lg text-white">
+              {username[0].toUpperCase()}
+            </div>
+          )}
         </div>
       </div>
-    </nav>
+
+      {/* Mobile Navbar */}
+      <div className="fixed top-0 left-0 w-full h-14 border border-blue-950 bg-blue-950 flex items-center justify-between z-10 lg:hidden">
+        <img src={logo} alt="logo" className="h-14 border-b" />
+        <div className="flex gap-2 items-center">
+          <button className="flex items-center justify-center w-10 h-10 text-4xl text-white">
+            {isAuthenticated ? (
+              <span className="bg-gray-600 w-10 h-10 rounded-full flex items-center justify-center text-lg">
+                {username[0].toUpperCase()}
+              </span>
+            ) : (
+              <IoPersonCircleSharp />
+            )}
+          </button>
+          <button className="text-white text-5xl">
+            <IoReorderThree />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

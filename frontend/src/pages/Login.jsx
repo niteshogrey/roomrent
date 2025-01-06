@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,7 @@ const Login = () => {
   const [userExists, setUserExists] = useState(false);
   const navigate = useNavigate();
 
+  console.log(userExists)
   // Handle sending OTP
   const handleSendOtp = async () => {
     if (!phoneNumber) return alert("Please enter a phone number.");
@@ -42,8 +43,12 @@ const Login = () => {
       if (response.data.userExists) {
         // User exists; login
         alert("Login successful!");
-        console.log(response.data.token);  
+        console.log(response.data.token);
+        console.log(response.data.username);  
+
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("username", response.data.username);
+
         navigate("/");
       } else {
         // New user; go to username step

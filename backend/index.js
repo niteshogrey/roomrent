@@ -1,22 +1,21 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const hotelRoute = require("./routes/hotelRoute");
 const cors = require('cors');
-const connectCloudinary = require("./config/cloudinary");
-const userRoute = require("./routes/userRoute");
+const connectDB = require("./src/config/db");
+const connectCloudinary = require("./src/config/cloudinary");
+const userRoute = require("./src/routes/userRouter");
+const hotelRoute = require("./src/routes/hotelRouter");
 
 
 
 //configuration
-
 dotenv.config();
-connectCloudinary()
+connectCloudinary();
+connectDB()
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const MONGOURL = process.env.MONGO_URL;
 
 // Enable CORS for all route
 app.use(cors());
@@ -24,14 +23,6 @@ app.use(cors());
 // Middleware to parse incoming requests
 app.use(bodyParser.json());
 
-// Database connection
-mongoose.connect(MONGOURL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-        console.log("Database connected successfully");
-    })
-    .catch((error) => {
-        console.log("Connection error:", error);
-    });
 
 // Routes
 app.use("/api/v1/hotels", hotelRoute);
